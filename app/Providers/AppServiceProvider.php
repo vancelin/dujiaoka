@@ -45,7 +45,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('Jenssegers\Agent', function () {
             return $this->app->make(Agent::class);
         });
-
+        $this->app->singleton('Service\CartService', function ($app) {
+            return new \App\Service\CartService();
+        });
     }
 
     /**

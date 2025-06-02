@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="applicable-device" content="pc,mobile">
     <title>{{ isset($page_title) ? $page_title : '' }} | {{ dujiaoka_config_get('title') }}</title>
-    <meta name="keywords" content="{{ $gd_keywords }}">
-    <meta name="description" content="{{ $gd_description }}">
+    <meta name="keywords" content="{{ $gd_keywords ?? dujiaoka_config_get('seo_keywords', '') }}">
+    <meta name="description" content="{{ $gd_description ?? dujiaoka_config_get('seo_description', '') }}">
     <meta property="og:type" content="article">
-    <meta property="og:image" content="{{ $picture }}">
+    <meta property="og:image" content="{{ $picture ?? dujiaoka_config_get('img_logo') }}">
     <meta property="og:title" content="{{ isset($page_title) ? $page_title : '' }}">
-    <meta property="og:description" content="{{ $gd_description }}">    
-    <meta property="og:release_date" content="{{ $updated_at }}">
+    <meta property="og:description" content="{{ $gd_description ?? dujiaoka_config_get('seo_description', '') }}">    
+    @if(isset($updated_at))
+        <meta property="og:release_date" content="{{ $updated_at }}">
+    @endif
     @if(\request()->getScheme() == "https")
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif

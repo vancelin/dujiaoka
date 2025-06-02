@@ -32,6 +32,17 @@ Route::group(['middleware' => ['dujiaoka.boot'],'namespace' => 'Home'], function
     Route::post('search-order-by-email', 'OrderController@searchOrderByEmail');
     // 通过浏览器查询
     Route::post('search-order-by-browser', 'OrderController@searchOrderByBrowser');
+    // 更新訂單 email
+    Route::post('update-order-email', 'OrderController@updateOrderEmail');
+    
+    // 購物車相關路由
+    Route::get('cart', 'CartController@index');
+    Route::get('cart/count', 'CartController@getCartCount');
+    Route::post('cart/add', 'CartController@addToCart');
+    Route::post('cart/update', 'CartController@updateQuantity');
+    Route::post('cart/remove', 'CartController@removeFromCart');
+    Route::post('cart/clear', 'CartController@clearCart');
+    Route::get('cart/checkout', 'CartController@checkout');
 });
 
 Route::group(['middleware' => ['install.check'],'namespace' => 'Home'], function () {

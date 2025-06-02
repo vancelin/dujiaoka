@@ -81,6 +81,9 @@ return [
     'order_information' => '订单资料',
     'pay_immediately' => '立即支付',
     'amount_to_be_paid' => '需要支付金额',
+    'email_for_order_notification' => '用于接收订单通知和卡密',
+    'email_updated_successfully' => 'Email 更新成功',
+    'update_email_failed' => 'Email 更新失败',
     'open_the_app_to_pay' => '打开 APP 支付',
     'order_search_by_sn' => '订单号查询',
     'order_search_by_email' => '下单邮箱查询',
@@ -92,6 +95,10 @@ return [
     'purchase_limit' => '每单限',
     'language' => '语言',
 
+    'product_description' => '商品详情',
+
+    'carmi_number' => '序号 :number',
+    'copy_all_carmis' => '复制全部序号',
 
     'prompt' => [
         'server_illegal_request' => '非法请求！',

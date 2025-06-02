@@ -44,14 +44,17 @@
                                         </ul>
                                     </li>
                                 </ul>
-                                @if(\Illuminate\Support\Facades\Request::path() == '/')
-                                    <form class="d-flex">
-                                        <input class="form-control form-control-sm me-sm-2" id="searchText" type="text" placeholder="{{ __('dujiaoka.search_goods_name') }}">
-                                        <button class="btn btn-secondary my-2 my-sm-0" type="button" id="searchBtn">
-                                            <i class="ali-icon">&#xe65c;</i>
-                                        </button>
-                                    </form>
-                                @endif
+                                
+                                <div class="d-flex align-items-center">
+                                    <!-- 購物車圖標 -->
+                                    <div class="cart-icon me-3">
+                                        <a href="{{ url('cart') }}" class="text-decoration-none position-relative">
+                                            <i class="ali-icon fs-4">&#xe7d8;</i>
+                                            <span class="cart-count badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill" style="font-size: 0.7rem;">0</span>
+                                        </a>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </nav>

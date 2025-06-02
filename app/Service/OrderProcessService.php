@@ -523,6 +523,97 @@ class OrderProcessService
      */
     public function processAuto(Order $order): Order
     {
+        // 檢查是否為購物車訂單
+        $isCartOrder = strpos($order->info, '購物車訂單:') === 0;
+        
+        if ($isCartOrder) {
+            // 處理購物車訂單的卡密發放
+            return $this->processCartOrderCarmis($order);
+        } else {
+            // 原有的單一商品訂單處理
+            return $this->processSingleOrderCarmis($order);
+        }
+    }
+
+    /**
+     * 處理購物車訂單的卡密發放
+     *
+     * @param Order $order 订单
+     * @return Order 订单
+     */
+    private function processCartOrderCarmis(Order $order): Order
+    {
+        $cartCarmis = [];
+        $carmisIds = [];
+        $insufficientStock = false;
+        
+        // 解析購物車訂單信息
+        $orderLines = explode("\n", $order->info);
+        array_shift($orderLines); // 移除第一行 "購物車訂單:"
+        
+        foreach ($orderLines as $line) {
+            if (empty(trim($line))) continue;
+            
+            // 解析格式：商品名稱: $價格 x 數量 = $總價
+            preg_match('/^([^:]+):\s*\$[\d,.]+ x (\d+) = /', trim($line), $matches);
+            
+            if (!$matches) continue;
+            
+            $productName = trim($matches[1]);
+            $quantity = (int)$matches[2];
+            
+            // 根據商品名稱查找商品ID
+            $goods = \App\Models\Goods::where('gd_name', $productName)->first();
+            
+            if (!$goods) {
+                continue; // 跳過找不到的商品
+            }
+            
+            // 獲取該商品的卡密
+            $carmis = $this->carmisService->withGoodsByAmountAndStatusUnsold($goods->id, $quantity);
+            
+            if (!$carmis || count($carmis) != $quantity) {
+                $insufficientStock = true;
+                break;
+            }
+            
+            // 添加卡密到結果中
+            foreach ($carmis as $carmi) {
+                $cartCarmis[] = $carmi['carmi'];
+                $carmisIds[] = $carmi['id'];
+            }
+        }
+        
+        // 檢查庫存是否足夠
+        if ($insufficientStock || empty($cartCarmis)) {
+            $order->info = __('dujiaoka.prompt.order_carmis_insufficient_quantity_available');
+            $order->status = Order::STATUS_ABNORMAL;
+            $order->save();
+            return $order;
+        }
+        
+        // 設置訂單完成
+        $order->info = implode(PHP_EOL, $cartCarmis);
+        $order->status = Order::STATUS_COMPLETED;
+        $order->save();
+        
+        // 將卡密設置為已售出
+        $this->carmisService->soldByIDS($carmisIds);
+        
+        // 發送郵件
+        $this->sendCartOrderEmail($order, $cartCarmis);
+        
+        return $order;
+    }
+
+    /**
+     * 處理單一商品訂單的卡密發放（原有邏輯）
+     *
+     * @param Order $order 订单
+     * @return Order 订单
+     */
+    private function processSingleOrderCarmis(Order $order): Order
+    {
         // 获得卡密
         $carmis = $this->carmisService->withGoodsByAmountAndStatusUnsold($order->goods_id, $order->buy_amount);
         // 实际可使用的库存已经少于购买数量了
@@ -556,6 +647,31 @@ class OrderProcessService
         // 邮件发送
         MailSend::dispatch($order->email, $mailBody['tpl_name'], $mailBody['tpl_content']);
         return $order;
+    }
+
+    /**
+     * 發送購物車訂單郵件
+     *
+     * @param Order $order
+     * @param array $carmisInfo
+     */
+    private function sendCartOrderEmail(Order $order, array $carmisInfo): void
+    {
+        $mailData = [
+            'created_at' => $order->create_at,
+            'product_name' => '購物車訂單',
+            'webname' => dujiaoka_config_get('text_logo', '独角数卡'),
+            'weburl' => config('app.url') ?? 'http://dujiaoka.com',
+            'ord_info' => implode('<br/>', $carmisInfo),
+            'ord_title' => $order->title,
+            'order_id' => $order->order_sn,
+            'buy_amount' => $order->buy_amount,
+            'ord_price' => $order->actual_price,
+        ];
+        $tpl = $this->emailtplService->detailByToken('card_send_user_email');
+        $mailBody = replace_mail_tpl($tpl, $mailData);
+        // 邮件发送
+        MailSend::dispatch($order->email, $mailBody['tpl_name'], $mailBody['tpl_content']);
     }
 
 }

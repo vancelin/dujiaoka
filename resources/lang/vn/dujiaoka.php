@@ -81,6 +81,9 @@ return [
     'order_information' => 'Thông tin đơn hàng',
     'pay_immediately' => 'Thanh toán ngay',
     'amount_to_be_paid' => 'Số tiền cần thanh toán',
+    'email_for_order_notification' => 'Để nhận thông báo đơn hàng và thẻ',
+    'email_updated_successfully' => 'Cập nhật email thành công',
+    'update_email_failed' => 'Cập nhật email thất bại',
     'open_the_app_to_pay' => 'Mở ứng dụng để thanh toán',
     'order_search_by_sn' => 'Tìm kiếm theo số đơn hàng',
     'order_search_by_email' => 'Tìm kiếm theo email đặt hàng',
@@ -92,6 +95,10 @@ return [
     'purchase_limit' => 'Giới hạn mỗi đơn',
     'language' => 'Ngôn ngữ',
 
+    'product_description' => 'Mô tả sản phẩm',
+
+    'carmi_number' => 'Thẻ số :number',
+    'copy_all_carmis' => 'Sao chép tất cả thẻ',
 
     'prompt' => [
         'server_illegal_request' => 'Yêu cầu không hợp lệ!',

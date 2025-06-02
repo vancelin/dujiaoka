@@ -31,8 +31,9 @@ return [
         'status_failure' => 'ล้มเหลว',
         'status_abnormal' => 'ผิดปกติ',
         'status_expired' => 'หมดอายุแล้ว',
-        'order_created' => 'เวลาที่สร้างคำสั่งซื้อ',
+        'order_created' => 'เวลาสร้างคำสั่งซื้อ',
         'order_detail' => 'รายละเอียดคำสั่งซื้อ',
+        'total_items' => 'จำนวนสินค้าทั้งหมด',
     ],
     'options' => [
     ],

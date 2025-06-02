@@ -68,13 +68,16 @@ class Goods extends BaseModel
      */
     public function getInStockAttribute()
     {
+        // 對於自動發貨商品，使用卡密數量作為庫存
         if (isset($this->attributes['carmis_count'])
             &&
             $this->attributes['type'] == self::AUTOMATIC_DELIVERY
         ) {
-           $this->attributes['in_stock'] = $this->attributes['carmis_count'];
+           return $this->attributes['carmis_count'];
         }
-        return $this->attributes['in_stock'];
+        
+        // 對於手動處理商品，使用原始庫存
+        return $this->attributes['in_stock'] ?? 0;
     }
 
     /**

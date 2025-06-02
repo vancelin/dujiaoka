@@ -34,6 +34,7 @@ return [
         'status_expired' => '已过期',
         'order_created' => '订单创建时间',
         'order_detail' => '订单详情',
+        'total_items' => '商品总数',
     ],
     'options' => [
     ],

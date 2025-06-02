@@ -72,4 +72,38 @@ class PayService
         return $gateway;
     }
 
+    /**
+     * 获取支付方式列表（用于购物车结算）
+     *
+     * @return array|null
+     *
+     * @author    assimon<ashang@utf8.hk>
+     * @copyright assimon<ashang@utf8.hk>
+     * @link      http://utf8.hk/
+     */
+    public function payList(): ?array
+    {
+        // 根据设备类型选择支付客户端
+        $client = Pay::PAY_CLIENT_PC;
+        
+        try {
+            // 嘗試使用註冊的 Agent 服務
+            if (app()->bound('Jenssegers\Agent')) {
+                $agent = app('Jenssegers\Agent');
+            } else {
+                // 直接實例化 Agent
+                $agent = new \Jenssegers\Agent\Agent();
+            }
+            
+            if ($agent->isMobile()) {
+                $client = Pay::PAY_CLIENT_MOBILE;
+            }
+        } catch (\Exception $e) {
+            // 如果 Agent 不可用，默認使用 PC 客戶端
+            $client = Pay::PAY_CLIENT_PC;
+        }
+        
+        return $this->pays($client);
+    }
+
 }

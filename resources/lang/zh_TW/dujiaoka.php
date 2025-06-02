@@ -69,6 +69,7 @@ return [
     'coupon_code' => '折扣碼',
     'copy_text' => '復製',
     'search_goods_name' => '商品名稱...',
+    'product_description' => '商品詳情',
 
     'behavior_verification' => '行為驗證',
     'click_to_behavior_verification' => '點擊進行此處行為驗證',
@@ -81,6 +82,9 @@ return [
     'order_information' => '訂單資料',
     'pay_immediately' => '立即支付',
     'amount_to_be_paid' => '需要支付金額',
+    'email_for_order_notification' => '用於接收訂單通知和卡密',
+    'email_updated_successfully' => 'Email 更新成功',
+    'update_email_failed' => 'Email 更新失敗',
     'open_the_app_to_pay' => '打開 APP 支付',
     'order_search_by_sn' => '訂單號查詢',
     'order_search_by_email' => '下單信箱查詢',
@@ -92,6 +96,8 @@ return [
     'purchase_limit' => '每單限',
     'language' => '語言',
 
+    'carmi_number' => '序號 :number',
+    'copy_all_carmis' => '複製全部序號',
 
     'prompt' => [
         'server_illegal_request' => '非法請求！',

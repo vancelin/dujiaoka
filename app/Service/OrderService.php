@@ -91,6 +91,67 @@ class OrderService
     }
 
     /**
+     * 创建订单验证（不需要 email）
+     *
+     * @param Request $request
+     * @throws RuleValidationException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validatorCreateOrderWithoutEmail(Request $request): void
+    {
+        $validator = Validator::make($request->all(), [
+            'gid' => 'required' ,
+            'payway' => ['required', 'integer'],
+            'search_pwd' => [new SearchPwd()],
+            'by_amount' => ['required', 'integer', 'min:1'],
+            'img_verify_code' => [new VerifyImg()],
+        ], [
+            'by_amount.required' =>  __('dujiaoka.prompt.buy_amount_format_error'),
+            'by_amount.integer' =>  __('dujiaoka.prompt.buy_amount_format_error'),
+            'by_amount.min' =>  __('dujiaoka.prompt.buy_amount_format_error'),
+            'payway.required' =>  __('dujiaoka.prompt.please_select_mode_of_payment'),
+            'payway.integer' =>  __('dujiaoka.prompt.please_select_mode_of_payment'),
+            'gid.required' =>  __('dujiaoka.prompt.goods_does_not_exist'),
+        ]);
+        if ($validator->fails()) {
+            throw new RuleValidationException($validator->errors()->first());
+        }
+        // 极验验证
+        if (
+            dujiaoka_config_get('is_open_geetest') == BaseModel::STATUS_OPEN
+            &&
+            !Validator::make($request->all(),
+                ['geetest_challenge' => 'geetest',],
+                [ 'geetest' => __('dujiaoka.prompt.geetest_validate_fail')])
+
+        ) {
+            throw new RuleValidationException(__('dujiaoka.prompt.geetest_validate_fail'));
+        }
+    }
+
+    /**
+     * 購物車結帳驗證
+     *
+     * @param Request $request
+     * @throws RuleValidationException
+     */
+    public function validatorCartCheckout(Request $request): void
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+            'payway' => ['required', 'integer'],
+        ], [
+            'payway.required' =>  __('dujiaoka.prompt.please_select_mode_of_payment'),
+            'payway.integer' =>  __('dujiaoka.prompt.please_select_mode_of_payment'),
+            'email.required' =>  __('dujiaoka.prompt.email_format_error'),
+            'email.email' =>  __('dujiaoka.prompt.email_format_error'),
+        ]);
+        if ($validator->fails()) {
+            throw new RuleValidationException($validator->errors()->first());
+        }
+    }
+
+    /**
      * 得到商品详情并验证
      *
      * @param Request $request 请求

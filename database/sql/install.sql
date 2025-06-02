@@ -408,7 +408,7 @@ CREATE TABLE `orders` (
   `order_sn` varchar(150) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT '订单号',
   `goods_id` int NOT NULL COMMENT '关联商品id',
   `coupon_id` int DEFAULT '0' COMMENT '关联优惠码id',
-  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单名称',
+  `title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单名称',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1自动发货 2人工处理',
   `goods_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '商品单价',
   `buy_amount` int NOT NULL DEFAULT '1' COMMENT '购买数量',

@@ -33,6 +33,7 @@ return [
         'status_expired' => 'Đã hết hạn',
         'order_created' => 'Thời gian tạo đơn hàng',
         'order_detail' => 'Chi tiết đơn hàng',
+        'total_items' => 'Tổng số sản phẩm',
     ],
     'options' => [
     ],

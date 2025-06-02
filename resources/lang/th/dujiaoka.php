@@ -79,8 +79,8 @@ return [
     'confirm_order' => 'ยืนยันคำสั่งซื้อ',
     'date_to_expired_order' => 'คำสั่งซื้อจะถูกยกเลิกหากไม่ชำระเงินภายใน :min นาที',
     'order_information' => 'ข้อมูลคำสั่งซื้อ',
-    'pay_immediately' => 'ชำระเงินทันที',
-    'amount_to_be_paid' => 'จำนวนเงินที่ต้องชำระ',
+    'pay_immediately' => 'จ่ายเงินทันที',
+    'amount_to_be_paid' => 'จำนวนเงินที่ต้องจ่าย',
     'open_the_app_to_pay' => 'เปิดแอปเพื่อชำระเงิน',
     'order_search_by_sn' => 'ค้นหาด้วยหมายเลขคำสั่งซื้อ',
     'order_search_by_email' => 'ค้นหาด้วยอีเมลที่สั่งซื้อ',
@@ -92,6 +92,7 @@ return [
     'purchase_limit' => 'จำกัดต่อคำสั่งซื้อ',
     'language' => 'ภาษา',
 
+    'product_description' => 'รายละเอียดสินค้า',
 
     'prompt' => [
         'server_illegal_request' => 'คำขอไม่ถูกต้อง!',
@@ -155,5 +156,11 @@ return [
         'please_input_phone' => 'โปรดกรอกหมายเลขโทรศัพท์',
         'phone_format_error' => 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง โปรดกรอกตัวเลข 10 หลักที่ขึ้นต้นด้วย 09',
         'order_number_notice' => 'โปรดจำหมายเลขคำสั่งซื้อไว้สำหรับการค้นหาหลังจากชำระเงินเสร็จสิ้น',
-    ]
+    ],
+
+    'email_for_order_notification' => 'สำหรับรับการแจ้งเตือนคำสั่งซื้อและบัตร',
+    'email_updated_successfully' => 'อัปเดตอีเมลสำเร็จ',
+    'update_email_failed' => 'อัปเดตอีเมลล้มเหลว',
+    'carmi_number' => 'บัตรที่ :number',
+    'copy_all_carmis' => 'คัดลอกบัตรทั้งหมด',
 ];

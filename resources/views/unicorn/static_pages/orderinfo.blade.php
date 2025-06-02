@@ -79,10 +79,50 @@
                                 <div class="col-12 col-md-6">
                                     <div class="card-body">
                                         <h6 class="card-title">{{ __('order.fields.info') }}</h6>
-                                        <div class="card-info">
-                                            <textarea class="form-control" rows="5">{{ $order['info'] }}</textarea>
-                                        </div>
-                                        <button id="copy-card" class="btn btn-primary mt-2" data-clipboard-text="{{ $order['info'] }}">{{ __('dujiaoka.copy_text') }}</button>
+                                        
+                                        @if($order['status'] == \App\Models\Order::STATUS_COMPLETED && $order['type'] == \App\Models\Order::AUTOMATIC_DELIVERY)
+                                            @php
+                                                $carmis = array_filter(explode(PHP_EOL, $order['info']));
+                                            @endphp
+                                            
+                                            @if(count($carmis) > 1)
+                                                <!-- 多個卡密分別顯示 -->
+                                                <div class="carmis-container">
+                                                    @foreach($carmis as $index => $carmi)
+                                                        <div class="carmi-item mb-3">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <small class="text-muted">{{ __('dujiaoka.carmi_number', ['number' => $index + 1]) }}</small>
+                                                                <button class="btn btn-sm btn-outline-primary copy-single-carmi" data-clipboard-text="{{ trim($carmi) }}">
+                                                                    <i class="fas fa-copy"></i> {{ __('dujiaoka.copy_text') }}
+                                                                </button>
+                                                            </div>
+                                                            <div class="carmi-content">
+                                                                <textarea class="form-control" rows="2" readonly>{{ trim($carmi) }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    
+                                                    <!-- 複製全部按鈕 -->
+                                                    <div class="text-center mt-3">
+                                                        <button class="btn btn-primary" data-clipboard-text="{{ $order['info'] }}">
+                                                            <i class="fas fa-copy"></i> {{ __('dujiaoka.copy_all_carmis') }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <!-- 單個卡密顯示 -->
+                                                <div class="card-info">
+                                                    <textarea class="form-control" rows="5" readonly>{{ $order['info'] }}</textarea>
+                                                </div>
+                                                <button id="copy-card" class="btn btn-primary mt-2" data-clipboard-text="{{ $order['info'] }}">{{ __('dujiaoka.copy_text') }}</button>
+                                            @endif
+                                        @else
+                                            <!-- 非自動發貨或未完成訂單的原始顯示 -->
+                                            <div class="card-info">
+                                                <textarea class="form-control" rows="5" readonly>{{ $order['info'] }}</textarea>
+                                            </div>
+                                            <button id="copy-card" class="btn btn-primary mt-2" data-clipboard-text="{{ $order['info'] }}">{{ __('dujiaoka.copy_text') }}</button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -97,15 +137,58 @@
     </section>
     <!-- main end -->
 @stop
+@section('css')
+<style>
+.carmis-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.carmi-item {
+    border: 1px solid #e9ecef;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+}
+
+.carmi-content textarea {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    background-color: white;
+    border: 1px solid #ced4da;
+}
+
+.copy-single-carmi {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.carmi-item:hover {
+    background-color: #e9ecef;
+}
+</style>
+@stop
 @section('js')
 <script src="/assets/unicorn/js/clipboard.min.js"></script>
 <script>
-    var clipboard = new ClipboardJS("#copy-card")
-    clipboard.on('success', function (e) {
-       alert("{{ __('dujiaoka.prompt.copy_text_success') }}")
+    // 複製單個卡密
+    var singleClipboard = new ClipboardJS(".copy-single-carmi");
+    singleClipboard.on('success', function (e) {
+        alert("{{ __('dujiaoka.prompt.copy_text_success') }}");
+        e.clearSelection();
     });
-    clipboard.on('error', function (e) {
-        alert("{{ __('dujiaoka.prompt.copy_text_failed') }}")
+    singleClipboard.on('error', function (e) {
+        alert("{{ __('dujiaoka.prompt.copy_text_failed') }}");
+    });
+
+    // 複製全部卡密
+    var allClipboard = new ClipboardJS("#copy-card, .btn-primary[data-clipboard-text]");
+    allClipboard.on('success', function (e) {
+        alert("{{ __('dujiaoka.prompt.copy_text_success') }}");
+        e.clearSelection();
+    });
+    allClipboard.on('error', function (e) {
+        alert("{{ __('dujiaoka.prompt.copy_text_failed') }}");
     });
 </script>
 @stop
