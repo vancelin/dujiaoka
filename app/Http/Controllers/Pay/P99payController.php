@@ -60,8 +60,10 @@ class P99payController extends PayController
             $trans->nodes["CID"] = $this->merchantId;     // 商家服務代碼
             $trans->nodes["COID"] = $orderSN;             // 商家訂單編號
             $trans->nodes["CUID"] = "USD";                // 幣別
-            $trans->nodes["PAID"] = "COPKWP01";           // 付款代收業者代碼
-            $trans->nodes["AMOUNT"] = $this->order->actual_price; // 交易金額
+            $trans->nodes["PAID"] = "";           // 付款代收業者代碼
+            // 將泰銖金額轉換為美金 (匯率: 0.031)
+            $usdAmount = round($this->order->actual_price * 0.0305, 2);
+            $trans->nodes["AMOUNT"] = $usdAmount; // 交易金額 (已轉換為美金)
             $trans->nodes["RETURN_URL"] = route('p99pay.returnUrl', ['orderSN' => $orderSN]); // 商家接收交易結果網址
             $trans->nodes["ORDER_TYPE"] = "M";            // 指定付款代收業者
             $trans->nodes["PRODUCT_NAME"] = $this->order->title; // 商品名稱
@@ -78,7 +80,9 @@ class P99payController extends PayController
 
             Log::info('P99Pay payment request:', [
                 'orderSN' => $orderSN,
-                'amount' => $trans->nodes["AMOUNT"],
+                'original_amount_thb' => $this->order->actual_price,
+                'converted_amount_usd' => $usdAmount,
+                'exchange_rate' => 0.031,
                 'dev_mode' => $this->dev,
                 'data' => $trans->nodes
             ]);
